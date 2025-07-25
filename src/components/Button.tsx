@@ -4,13 +4,14 @@ interface ButtonProps {
     children?: ReactNode,
     text?: string,
     variant?: "primary" | "secondary",
+    onClick?: () => void,
 }
 
 const Button = (props: ButtonProps) => {
-  const { children, text, variant="primary" } = props
+  const { children, text, variant="primary", onClick } = props
 
   return (
-    <button className={"btn" + variant}>
+    <button className={"btn" + variant} onClick={onClick}>
         {children || text}
     </button>
   )

@@ -1,6 +1,6 @@
 import type React from "react"
 import Button from "./components/Button"
-import { useState } from "react"
+import { useState, type FormEvent } from "react"
 
 interface User {
   name: string,
@@ -15,6 +15,8 @@ const App = () => {
     age: "",
   });
 
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserDetails({
         ...userDetails,
@@ -24,17 +26,51 @@ const App = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const newUser = {
+      name: userDetails.name,
+      age: Number(userDetails.age),
+    };
+    if (editIndex !== null) {
+      // Update
+      const updatedUsers = [...users];
+      updatedUsers[editIndex] = newUser;
+      setUsers(updatedUsers);
+      setEditIndex(null);
+    } else {
+      // Create
+      setUsers([...users, newUser]);
+    }
+    setUserDetails({ name: "", age: "" });
+  }
 
-    setUsers([...users, userDetails]);
+  const handleDelete = (index: number) => {
+    setUsers(users.filter((_, i) => i !== index));
+  }
+
+  const handleEdit = (index: number) => {
+    setEditIndex(index);
+    setUserDetails({
+      name: users[index].name,
+      age: String(users[index].age),
+    });
   }
 
   return (
     <div style={{ padding: "20px"}}>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Name" name="name" onInput={handleChange} />
-        <input type="number" placeholder="Age" name="age" onInput={handleChange} />
-      <Button variant="secondary">Hello</Button>
+        <input type="text" placeholder="Name" name="name" value={userDetails.name} onChange={handleChange} />
+        <input type="number" placeholder="Age" name="age" value={userDetails.age} onChange={handleChange} />
+        <Button variant="secondary">{editIndex !== null ? "Update" : "Add"}</Button>
       </form>
+      <ul>
+        {users.map((user, idx) => (
+          <li key={idx} style={{marginTop: '10px'}}>
+            {user.name} ({user.age} yosh)
+            <Button variant="secondary" onClick={() => handleEdit(idx)} style={{marginLeft: '10px'}}>Edit</Button>
+            <Button variant="secondary" onClick={() => handleDelete(idx)} style={{marginLeft: '5px'}}>Delete</Button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
