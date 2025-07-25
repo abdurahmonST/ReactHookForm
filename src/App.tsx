@@ -66,8 +66,8 @@ const App = () => {
         {users.map((user, idx) => (
           <li key={idx} style={{marginTop: '10px'}}>
             {user.name} ({user.age} yosh)
-            <Button variant="secondary" onClick={() => handleEdit(idx)} style={{marginLeft: '10px'}}>Edit</Button>
-            <Button variant="secondary" onClick={() => handleDelete(idx)} style={{marginLeft: '5px'}}>Delete</Button>
+            <Button variant="secondary" onClick={() => handleEdit(idx)} >Edit</Button>
+            <Button variant="secondary" onClick={() => handleDelete(idx)} >Delete</Button>
           </li>
         ))}
       </ul>
